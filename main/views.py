@@ -15,10 +15,10 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('')
+            return redirect('/')
         else:
             return render(request,'login.html')
 
-@login_required(login_url='login/')
+@login_required
 def main_view(request):
     return render(request,'main.html')
