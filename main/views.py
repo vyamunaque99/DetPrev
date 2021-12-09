@@ -19,6 +19,12 @@ def login_view(request):
         else:
             return render(request,'login.html')
 
+def register_view(request):
+    return render (request,'register.html')
+
+def index_view(request):
+    return render (request,'index.html')    
+
 @login_required(login_url='login/')
 def main_view(request):
     return render(request,'main.html')
