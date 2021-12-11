@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="main-card mb-3 card">
+    <div class="card-body">
+        <h5 class="card-title">Generacion de datasets</h5>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <div class="fieldWrapper">
+                {{ form.dataset_name.errors }}
+                <label for="{{ form.dataset_name.id_for_label }}"> Nombre de dataset:</label>
+                {{ form.dataset_name }}
+            </div>
+            <div class="fieldWrapper">
+                {{ form.file.errors }}
+                <label for="{{ form.file.id_for_label }}"> Archivo:</label>
+                {{ form.file }}
+            </div>
+            <input type="submit" value="Generar">
+        </form>
+        {% if dataset_table %}
+        <div class="main-card mb-3 mt-3 card">
+            <div class="card-body">
+                <h5 class="card-title">Dataset</h5>
+                <table class="mb-0 table">
+                    <thead>
+                        <tr>
+                        {% for item in dataset_table %}
+                            {% if forloop.first %}
+                                {% for h in item %}
+                                    <th>{{ h }}</th>
+                                {% endfor %}
+                            {% endif%}
+                        {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in dataset_table %}
+                            <tr>
+                                {% for key,value in item.items %}
+                                    <td>{{ value}}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock%}
