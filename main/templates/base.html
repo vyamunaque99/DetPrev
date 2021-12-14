@@ -27,6 +27,12 @@
     <link href="{% static 'css/main.css' %}" rel="stylesheet" />
 </head>
 
+<style>
+    tr.highlighted td {
+        background: none repeat scroll 0 0 #EBF4FB;
+        }
+</style>
+
 <body>
     <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
         <div class="app-header header-shadow">
@@ -103,7 +109,7 @@
                                     </div>
                                 </div>
                                 <div class="widget-content-left ml-3 header-user-info">
-                                    <div class="widget-heading">{{ user.get_username }}</div>
+                                    <div class="widget-heading">{{ user.first_name }}</div>
                                     <div class="widget-subheading">VP People Manager</div>
                                 </div>
                                 <div class="widget-content-right header-user-info ml-3">
@@ -224,7 +230,9 @@
         </div>
     </div>
     {% block scripts %}{% endblock %}
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/selected.js' %}" async></script>
 </body>
 
 </html>
