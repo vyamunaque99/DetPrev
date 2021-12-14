@@ -82,7 +82,7 @@ def dataset_generation_view(request):
 
 def dataset_handler(file):
     dataset = pd.read_csv(file)
-    json_recods = dataset.reset_index().to_json(orient='records')
+    json_recods = dataset.to_json(orient='records')
     data = []
     data = json.loads(json_recods)
     return data
