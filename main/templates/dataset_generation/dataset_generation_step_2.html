@@ -1,0 +1,48 @@
+{% extends "base.html" %} 
+{% load static %} 
+{% block scripts %}
+<script type="text/javascript" src="{% static 'js/dataset_generation.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/dataset_generation.css' %}" />
+{% endblock %} 
+{% block content %}
+{% if dataset_table %}
+<div class="main-card mb-3 card">
+    <div class="card-body">
+        <form method="POST" action="/dataset_generation/">
+        {% csrf_token %} 
+        <h3>Selecciona la columna actividad</h3>
+        <div class="main-card mb-3 mt-3 card">
+            <div class="card-body">
+                <h5 class="card-title">Dataset</h5>
+                <table class="mb-0 table" id="dataTable">
+                    <thead>
+                        <tr>
+                        {% for item in dataset_table %}
+                            {% if forloop.first %}
+                                {% for h in item %}
+                                    <th>{{ h }}</th>
+                                {% endfor %}
+                            {% endif%}
+                        {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in dataset_table %}
+                            <tr>
+                                {% for key,value in item.items %}
+                                    <td>{{ value}}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <input type="hidden" name="activity_index" value="" id="js_id_index">
+        <input type="hidden" name="step" value="2">
+        <input type="submit" class="btn btn-secondary" name="submit" value="Submit">  
+    </form>
+    </div>
+</div>
+{% endif %}
+{% endblock%}

@@ -71,14 +71,55 @@ def dataset_generation_view(request):
     if request.method == 'GET':
         form = uploadDatasetForm()
         context = {'form': form}
-        return render(request, 'dataset_generation.html', context)
+        return render(request, 'dataset_generation/dataset_generation_upload.html', context)
     else:
-        form = uploadDatasetForm(request.POST, request.FILES)
-        if form.is_valid():
-            dataset_table = dataset_handler(request.FILES['file'])
-            context = {'dataset_table': dataset_table, 'form': form}
-        return render(request, 'dataset_generation.html', context)
-
+        print(request.POST['step'])
+        if request.POST['step']=='0':
+            print('xd')
+            form = uploadDatasetForm(request.POST, request.FILES)
+            if form.is_valid():
+                dataset_table = dataset_handler(request.FILES['file'])
+                context = {'dataset_table': dataset_table, 'form': form}
+                request.session['dataset_table']=dataset_table
+                request.session['indexes']={}
+            return render(request, 'dataset_generation/dataset_generation_step_1.html', context)
+        elif request.POST['step']=='1':
+            id_index = request.POST['id_index']
+            dataset_table=request.session.get('dataset_table')
+            context = {'dataset_table': dataset_table}
+            #Se agrega el indice al diccionario de indices
+            indexes=request.session.get('indexes')
+            indexes['id_index']=int(id_index)
+            request.session['indexes']=indexes
+            print(indexes)
+            return render(request, 'dataset_generation/dataset_generation_step_2.html',context)
+        elif request.POST['step']=='2':
+            activity_index = request.POST['activity_index']
+            dataset_table=request.session.get('dataset_table')
+            context = {'dataset_table': dataset_table}
+            #Se agrega el indice al diccionario de indices
+            indexes=request.session.get('indexes')
+            indexes['activity_index']=int(activity_index)
+            request.session['indexes']=indexes
+            print(indexes)
+            return render(request, 'dataset_generation/dataset_generation_step_3.html',context)
+        elif request.POST['step']=='3':
+            timestamp_index = request.POST['timestamp_index']
+            dataset_table=request.session.get('dataset_table')
+            context = {'dataset_table': dataset_table}
+            #Se agrega el indice al diccionario de indices
+            indexes=request.session.get('indexes')
+            indexes['timestamp_index']=int(timestamp_index)
+            request.session['indexes']=indexes
+            #Procesamiento de DataFrame
+            print(type(indexes['id_index']))
+            processed_dataframe=pd.DataFrame.from_dict(dataset_table)
+            processed_dataframe=processed_dataframe.iloc[:,[indexes['id_index'],indexes['activity_index'],indexes['timestamp_index']]]
+            processed_dataframe.to_csv('dataset.csv',index=False)
+            return render(request, 'dataset_generation/dataset_success.html',context)
+        else:
+            return redirect('/')
+        
 
 def dataset_handler(file):
     dataset = pd.read_csv(file)
@@ -86,3 +127,4 @@ def dataset_handler(file):
     data = []
     data = json.loads(json_recods)
     return data
+

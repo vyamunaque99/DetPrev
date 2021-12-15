@@ -1,0 +1,34 @@
+{% extends "base.html" %} {% load static %} {% block scripts %}
+<link rel="stylesheet" href="{% static 'css/dataset_generation_upload.css' %}" />
+{% endblock %} {% block content %}
+<div class="main-card mb-3 card">
+    <div class="card-body">
+        <h5 class="card-title">Generacion de datasets</h5>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %} {{ form.non_field_errors }}
+            <div class="wrapper">
+                <div class="container">
+                    <h1>Carga tu dataset</h1>
+                    <div class="upload-container">
+                        <div class="border-container">
+                            <div class="icons fa-4x">
+                                <i class="fas fa-file-image" data-fa-transform="shrink-3 down-2 left-6 rotate--45"></i>
+                                <i class="fas fa-file-alt" data-fa-transform="shrink-2 up-4"></i>
+                                <i class="fas fa-file-pdf" data-fa-transform="shrink-3 down-2 right-6 rotate-45"></i>
+                            </div>
+                            <div clfass="fieldWrapper">
+                                {{ orm.file.errors }} {{ form.file }}
+                            </div>
+                            <p>Carga tu archivo (Solo se aceptan CSV y XLSX)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center">
+                <input type="hidden" name="step" value="0">
+                <input type="submit" value="Cargar" />
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock%}
