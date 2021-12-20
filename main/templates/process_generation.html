@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="main-card mb-3 card">
+    <div class="card-body">
+        <table class="mb-0 table" style="overflow-x:auto;">
+            <thead>
+                <tr>
+                    <th>Dataset ID</th>
+                    <th>Nombre del dataset</th>
+                    <th>Accion</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in datasets %}
+                <tr>
+                    <td>{{item.id}}</td>
+                    <td>{{item.name}}</td>
+                    <td>
+                        <form action="/process_generation/{{user.get_username}}/{{item.name}}" method="get"><button
+                                type="submit" class="btn btn-info">Generar Visualización</button></form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

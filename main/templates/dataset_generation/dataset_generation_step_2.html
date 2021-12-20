@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="{% static 'css/dataset_generation.css' %}" />
 {% endblock %} 
 {% block content %}
-{% if dataset_table %}
+{% if dataset_table_html %}
 <div class="main-card mb-3 card">
     <div class="card-body">
         <form method="POST" action="/dataset_generation/">
@@ -14,10 +14,10 @@
         <div class="main-card mb-3 mt-3 card">
             <div class="card-body">
                 <h5 class="card-title">Dataset</h5>
-                <table class="mb-0 table" id="dataTable">
+                <table class="mb-0 table" id="dataTable" style="overflow-x:auto;">
                     <thead>
                         <tr>
-                        {% for item in dataset_table %}
+                        {% for item in dataset_table_html %}
                             {% if forloop.first %}
                                 {% for h in item %}
                                     <th>{{ h }}</th>
@@ -27,7 +27,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for item in dataset_table %}
+                        {% for item in dataset_table_html %}
                             <tr>
                                 {% for key,value in item.items %}
                                     <td>{{ value}}</td>
