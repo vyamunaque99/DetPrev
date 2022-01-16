@@ -10,6 +10,8 @@ urlpatterns = [
     path('logout/',logout_view),
     path('dataset_generation/',dataset_generation_view),
     path('process_generation/',process_generation_view),
-    path('process_generation/<str:username>/<str:dataset_name>',process_generation_detail),
+    path('process_generation/<str:username>/<str:dataset_name>/',process_generation_detail),
+    path('assets/<str:username>/<str:dataset_name>/<str:process>/',process_view),
+    path('dataset_delete/<str:username>/<str:dataset_name>/',dataset_delete),
     path('',main_view)
 ]

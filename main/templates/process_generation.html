@@ -8,7 +8,8 @@
                 <tr>
                     <th>Dataset ID</th>
                     <th>Nombre del dataset</th>
-                    <th>Accion</th>
+                    <th>Visualizar</th>
+                    <th>Eliminar</th>
                 </tr>
             </thead>
             <tbody>
@@ -17,8 +18,12 @@
                     <td>{{item.id}}</td>
                     <td>{{item.name}}</td>
                     <td>
-                        <form action="/process_generation/{{user.get_username}}/{{item.name}}" method="get"><button
+                        <form action="/process_generation/{{user.get_username}}/{{item.name}}/" method="get"><button
                                 type="submit" class="btn btn-info">Generar Visualización</button></form>
+                    </td>
+                    <td>
+                        <form action="/dataset_delete/{{user.get_username}}/{{item.name}}/" method="get"><button
+                                type="submit" class="btn btn-danger">Eliminar Dataset</button></form>
                     </td>
                 </tr>
                 {% endfor %}

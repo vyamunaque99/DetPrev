@@ -9,6 +9,7 @@ import pandas as pd
 import json
 import os
 import pm4py
+import shutil
 
 # Validacion de usuario logeado
 def user_is_not_logged_in(user):
@@ -130,6 +131,13 @@ def dataset_generation_view(request):
             processed_dataframe = pd.DataFrame.from_dict(dataset_table_full)
             processed_dataframe = processed_dataframe.iloc[:, [
                 indexes['id_index'], indexes['activity_index'], indexes['timestamp_index']]]
+            processed_dataframe.columns=['case_id','activity','timestamp']
+            # Validacion de dataset existente
+            if Dataset.objects.filter(name=dataset_name).exists():
+                error_message='El nombre del dataset ya existe'
+                dataset_table_html = request.session.get('dataset_table_html')
+                context = {'dataset_table_html': dataset_table_html,'error_message':error_message}
+                return render(request, 'dataset_generation/dataset_generation_step_3.html', context)
             # Almacenamiento de DataFrame
             if not os.path.exists(os.path.join(os.getcwd(),'main','assets',request.user.get_username(),dataset_name)):
                 os.makedirs(os.path.join(os.getcwd(),'main','assets',request.user.get_username(),dataset_name))       
@@ -166,6 +174,26 @@ def process_generation_detail(request,username,dataset_name):
     event_log=pm4py.format_dataframe(event_log,case_id='case_id',activity_key='activity',timestamp_key='timestamp')
     process_tree=pm4py.discover_tree_inductive(event_log)
     bpmn_model=pm4py.convert_to_bpmn(process_tree)
+    pm4py.write_bpmn(bpmn_model,'main/assets/{}/{}/process.bpmn'.format(username,dataset_name),enable_layout=True)
     pm4py.save_vis_bpmn(bpmn_model,'main/assets/{}/{}/process.png'.format(username,dataset_name))
     img=open('main/assets/{}/{}/process.png'.format(username,dataset_name),'rb')
-    return FileResponse(img)
+    diagramUrl = '/assets/{}/{}/process.bpmn'.format(username,dataset_name)
+    context={'diagramUrl':diagramUrl}
+    return render(request, 'process_view.html')
+
+@login_required
+def process_view(request,username,dataset_name,process):
+    file=open('main/assets/{}/{}/{}'.format(username,dataset_name,process),'rb')
+    print('xd')
+    return FileResponse(file)
+
+@login_required
+def dataset_delete(request,username,dataset_name):
+    #Eliminacion en BD
+    Dataset.objects.filter(user=request.user,name=dataset_name).delete()
+    #Eliminacion de assets en servidor
+    shutil.rmtree('main/assets/{}/{}'.format(username,dataset_name))
+    #Recarga de datasets para mostrar de nuevo
+    datasets=Dataset.objects.all().filter(user=request.user)
+    context={'datasets':datasets}
+    return redirect('/process_generation')

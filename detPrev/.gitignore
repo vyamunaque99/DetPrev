@@ -1,0 +1,5 @@
+#Archivos generados por Django
+__pycache__/
+main/__pycache__/
+#Assets usados para los datasets
+main/assets/*
