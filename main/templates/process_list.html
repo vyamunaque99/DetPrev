@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="main-card mb-3 card">
+    <div class="card-body">
+        <table class="mb-0 table" style="overflow-x:auto;">
+            <thead>
+                <tr>
+                    <th>Conformance Checking ID</th>
+                    <th>Nombre del proceso</th>
+                    <th>Repeticion</th>
+                    <th>Usuario OS</th>
+                    <th>IP</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in conformance_checking %}
+                <tr>
+                    <td>{{item.id}}</td>
+                    <td>{{item.process.name}}</td>
+                    <td>{{item.frecuency_time}} {{item.frecuency}}</td>
+                    <td>{{item.os_user}}</td>
+                    <td>{{item.user_ip}}</td>
+                    <td>
+                        <form action="/process_monitoring_delete/{{user.get_username}}/{{item.id}}" method="get"><button
+                                type="submit" class="btn btn-danger">Eliminar Tarea</button></form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

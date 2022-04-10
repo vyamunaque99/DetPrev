@@ -1,10 +1,10 @@
-from django.http.response import FileResponse, HttpResponse
+from django.http.response import FileResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .forms import uploadDatasetForm
-from .models import Dataset
+from .forms import uploadDatasetForm, conformanceCheckingForm
+from .models import ConformanceChecking, Dataset
 import pandas as pd
 import json
 import os
@@ -12,10 +12,14 @@ import pm4py
 import shutil
 
 # Validacion de usuario logeado
+
+
 def user_is_not_logged_in(user):
     return not user.is_authenticated
 
 # Vista de login
+
+
 @user_passes_test(user_is_not_logged_in, '/')
 def login_view(request):
     if request.method == 'GET':
@@ -77,7 +81,8 @@ def dataset_generation_view(request):
         if request.POST['step'] == '0':
             form = uploadDatasetForm(request.POST, request.FILES)
             if form.is_valid():
-                dataset_table = dataset_handler(request.FILES['file'],request.POST['separator'])
+                dataset_table = dataset_handler(
+                    request.FILES['file'], request.POST['separator'])
                 dataset_table_full = dataset_table[0]
                 dataset_table_html = dataset_table[1]
                 context = {
@@ -108,18 +113,20 @@ def dataset_generation_view(request):
             return render(request, 'dataset_generation/dataset_generation_step_3.html', context)
         elif request.POST['step'] == '3':
             dataset_name = request.POST['dataset_name']
-            #Validacion de formulario
+            # Validacion de formulario
             timestamp_index = request.POST['timestamp_index']
-            if dataset_name=='':
-                error_message='El dataset debe contener un nombre'
+            if dataset_name == '':
+                error_message = 'El dataset debe contener un nombre'
                 dataset_table_html = request.session.get('dataset_table_html')
-                context = {'dataset_table_html': dataset_table_html,'error_message':error_message}
+                context = {'dataset_table_html': dataset_table_html,
+                           'error_message': error_message}
                 return render(request, 'dataset_generation/dataset_generation_step_3.html', context)
             elif ' ' in dataset_name:
-                error_message='El nombre del dataset no debe contener espacios'
+                error_message = 'El nombre del dataset no debe contener espacios'
                 dataset_table_html = request.session.get('dataset_table_html')
-                context = {'dataset_table_html': dataset_table_html,'error_message':error_message}
-                return render(request, 'dataset_generation/dataset_generation_step_3.html', context) 
+                context = {'dataset_table_html': dataset_table_html,
+                           'error_message': error_message}
+                return render(request, 'dataset_generation/dataset_generation_step_3.html', context)
             dataset_table_full = request.session.get('dataset_table_full')
             context = {'dataset_table_full': dataset_table_full}
             # Se agrega el indice al diccionario de indices
@@ -131,27 +138,31 @@ def dataset_generation_view(request):
             processed_dataframe = pd.DataFrame.from_dict(dataset_table_full)
             processed_dataframe = processed_dataframe.iloc[:, [
                 indexes['id_index'], indexes['activity_index'], indexes['timestamp_index']]]
-            processed_dataframe.columns=['case_id','activity','timestamp']
+            processed_dataframe.columns = ['case_id', 'activity', 'timestamp']
             # Validacion de dataset existente
             if Dataset.objects.filter(name=dataset_name).exists():
-                error_message='El nombre del dataset ya existe'
+                error_message = 'El nombre del dataset ya existe'
                 dataset_table_html = request.session.get('dataset_table_html')
-                context = {'dataset_table_html': dataset_table_html,'error_message':error_message}
+                context = {'dataset_table_html': dataset_table_html,
+                           'error_message': error_message}
                 return render(request, 'dataset_generation/dataset_generation_step_3.html', context)
             # Almacenamiento de DataFrame
-            if not os.path.exists(os.path.join(os.getcwd(),'main','assets',request.user.get_username(),dataset_name)):
-                os.makedirs(os.path.join(os.getcwd(),'main','assets',request.user.get_username(),dataset_name))       
-            processed_dataframe.to_csv('main/assets/{}/{}/dataset.csv'.format(request.user.get_username(),dataset_name), index=False)
-            dataset=Dataset.objects.create(name=dataset_name,user=request.user)
+            if not os.path.exists(os.path.join(os.getcwd(), 'main', 'assets', request.user.get_username(), dataset_name)):
+                os.makedirs(os.path.join(os.getcwd(), 'main', 'assets',
+                            request.user.get_username(), dataset_name))
+            processed_dataframe.to_csv('main/assets/{}/{}/dataset.csv'.format(
+                request.user.get_username(), dataset_name), index=False)
+            dataset = Dataset.objects.create(
+                name=dataset_name, user=request.user)
             dataset.save()
             return render(request, 'dataset_generation/dataset_success.html', context)
         else:
             return redirect('/')
 
 
-def dataset_handler(file,separator):
+def dataset_handler(file, separator):
     # Procesamiento dataset completo
-    dataset_1 = pd.read_csv(file,sep=separator)
+    dataset_1 = pd.read_csv(file, sep=separator)
     json_recods_1 = dataset_1.to_json(orient='records')
     data_1 = []
     data_1 = json.loads(json_recods_1)
@@ -162,38 +173,92 @@ def dataset_handler(file,separator):
     data_2 = json.loads(json_recods_2)
     return [data_1, data_2]
 
+
 @login_required
 def process_generation_view(request):
-    datasets=Dataset.objects.all().filter(user=request.user)
-    context={'datasets':datasets}
+    datasets = Dataset.objects.all().filter(user=request.user)
+    context = {'datasets': datasets}
     return render(request, 'process_generation.html', context)
 
+
 @login_required
-def process_generation_detail(request,username,dataset_name):
-    event_log=pd.read_csv('main/assets/{}/{}/dataset.csv'.format(username,dataset_name))
-    event_log=pm4py.format_dataframe(event_log,case_id='case_id',activity_key='activity',timestamp_key='timestamp')
-    process_tree=pm4py.discover_tree_inductive(event_log)
-    bpmn_model=pm4py.convert_to_bpmn(process_tree)
-    pm4py.write_bpmn(bpmn_model,'main/assets/{}/{}/process.bpmn'.format(username,dataset_name),enable_layout=True)
-    pm4py.save_vis_bpmn(bpmn_model,'main/assets/{}/{}/process.png'.format(username,dataset_name))
-    img=open('main/assets/{}/{}/process.png'.format(username,dataset_name),'rb')
-    diagramUrl = '/assets/{}/{}/process.bpmn'.format(username,dataset_name)
-    context={'diagramUrl':diagramUrl}
+def process_generation_detail(request, username, dataset_name):
+    event_log = pd.read_csv(
+        'main/assets/{}/{}/dataset.csv'.format(username, dataset_name))
+    event_log = pm4py.format_dataframe(
+        event_log, case_id='case_id', activity_key='activity', timestamp_key='timestamp')
+    process_tree = pm4py.discover_tree_inductive(event_log)
+    bpmn_model = pm4py.convert_to_bpmn(process_tree)
+    petri_net_model,initial_marking,final_marking = pm4py.convert_to_petri_net(process_tree)
+    # Escritura de BPMN
+    pm4py.write_bpmn(bpmn_model, 'main/assets/{}/{}/process.bpmn'.format(
+        username, dataset_name), enable_layout=True)
+    # Escritura de Petri Net
+    pm4py.write_petri_net(
+        petri_net_model,initial_marking,final_marking,'main/assets/{}/{}/process.ptn'.format(username, dataset_name))
+    pm4py.save_vis_bpmn(
+        bpmn_model, 'main/assets/{}/{}/process.png'.format(username, dataset_name))
+    img = open(
+        'main/assets/{}/{}/process.png'.format(username, dataset_name), 'rb')
+    diagramUrl = '/assets/{}/{}/process.bpmn'.format(username, dataset_name)
+    context = {'diagramUrl': diagramUrl}
     return render(request, 'process_view.html')
 
-@login_required
-def process_view(request,username,dataset_name,process):
-    file=open('main/assets/{}/{}/{}'.format(username,dataset_name,process),'rb')
-    print('xd')
-    return FileResponse(file)
 
 @login_required
-def dataset_delete(request,username,dataset_name):
-    #Eliminacion en BD
-    Dataset.objects.filter(user=request.user,name=dataset_name).delete()
-    #Eliminacion de assets en servidor
-    shutil.rmtree('main/assets/{}/{}'.format(username,dataset_name))
-    #Recarga de datasets para mostrar de nuevo
-    datasets=Dataset.objects.all().filter(user=request.user)
-    context={'datasets':datasets}
+def process_view(request, username, dataset_name, process):
+    file = open('main/assets/{}/{}/{}'.format(username,
+                dataset_name, process), 'rb')
+    return FileResponse(file)
+
+
+@login_required
+def dataset_delete(request, username, dataset_name):
+    # Eliminacion en BD
+    Dataset.objects.filter(user=request.user, name=dataset_name).delete()
+    # Eliminacion de assets en servidor
+    shutil.rmtree('main/assets/{}/{}'.format(username, dataset_name))
+    # Recarga de datasets para mostrar de nuevo
+    datasets = Dataset.objects.all().filter(user=request.user)
+    context = {'datasets': datasets}
     return redirect('/process_generation')
+
+
+@login_required
+def process_monitoring_view(request):
+    if request.method == 'GET':
+        form = conformanceCheckingForm(request.user)
+        context = {'form': form}
+        return render(request, 'process_monitoring_view.html', context)
+    else:
+        start_time = request.POST['start_time']
+        start_date = request.POST['start_date']
+        process = request.POST['process']
+        frecuency = request.POST['frecuency']
+        frecuency_time = request.POST['frecuency_time']
+        os_user = request.POST['os_user']
+        user_ip = request.POST['user_ip']
+        log_file = request.POST['log_file']
+        port_number = request.POST['port_number']
+        ssh_pub_key = request.POST['ssh_pub_key']
+        process_object = Dataset.objects.get(name=process)
+        print(process_object)
+        conformanceChecking = ConformanceChecking.objects.create(
+            start_time=start_time, start_date=start_date, process=process_object, frecuency=frecuency,
+            frecuency_time=frecuency_time, os_user=os_user, user_ip=user_ip,
+            log_file=log_file, port_number=port_number, ssh_pub_key=ssh_pub_key)
+        conformanceChecking.save()
+        return redirect('/')
+
+
+@login_required
+def process_monitoring_list_view(request):
+    conformance_checking = ConformanceChecking.objects.all()
+    context = {'conformance_checking': conformance_checking}
+    return render(request, 'process_list.html', context)
+
+
+@login_required
+def process_monitoring_delete(request, username, id):
+
+    return redirect('/process_monitoring_list')

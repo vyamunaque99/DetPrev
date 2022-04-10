@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="main-card mb-3 card">
+    <div class="card-body">
+        <form class="" method="POST" action="/process_monitoring/">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="col-md-6">
+                    <div class="position-relative form-group"><label>Fecha de inicio:</label>{{form.start_date}}</div>
+                </div>
+                <div class="col-md-6">
+                    <div class="position-relative form-group"><label>Hora de inicio:</label>{{form.start_time}}</div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-md-2">
+                    <div class="position-relative form-group"><label>Proceso:</label>{{form.process}}</div>
+                </div>
+                <div class="col-md-2">
+                    <div class="position-relative form-group"><label>Repetir cada:</label>{{form.frecuency_time}}</div>
+                </div>
+                <div class="col-md-2">
+                    <div class="position-relative form-group"><label>Tiempo:</label>{{form.frecuency}}</div>
+                </div>
+                <div class="col-md-2">
+                    <div class="position-relative form-group"><label>Usuario OS:</label>{{form.os_user}}</div>
+                </div>
+                <div class="col-md-2">
+                    <div class="position-relative form-group"><label>IP:</label>{{form.user_ip}}</div>
+                </div>
+                <div class="col-md-2">
+                    <div class="position-relative form-group"><label>Puerto:</label>{{form.port_number}}</div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-md-12">
+                    <div class="position-relative form-group"><label>Ruta del log de evento:</label>{{form.log_file}}</div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-md-12">
+                    <div class="position-relative form-group"><label>Clave SSH Publica:</label>{{form.ssh_pub_key}}</div>
+                </div>
+            </div>
+            <button type="submit" class="form-control btn btn-primary submit px-3">Agregar procedimiento</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
