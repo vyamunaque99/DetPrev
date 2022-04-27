@@ -1,3 +1,4 @@
+from importlib.machinery import ModuleSpec
 import json
 
 from django.db import models
@@ -46,6 +47,21 @@ class ConformanceChecking(models.Model):
         )
         self.save()
 
+class Stakeholder(models.Model):
+    name=models.CharField(max_length=50)
+    email=models.EmailField()
+    def __str__(self):
+        return u'{0}'.format(self.name)
+
+class StakeholderList(models.Model):
+    name=models.CharField(max_length=50)
+    def __str__(self):
+        return u'{0}'.format(self.name)
+
+class StakeholderListDetail(models.Model):
+    list_name=models.ForeignKey(StakeholderList,on_delete=models.CASCADE)
+    stakeholder_name=models.ForeignKey(Stakeholder,on_delete=models.CASCADE)
+
 @receiver(post_save,sender=ConformanceChecking)
 def periodic_task_creation(sender,instance,created,**kwargs):
     if created:
@@ -55,19 +71,3 @@ def periodic_task_creation(sender,instance,created,**kwargs):
             instance.task.enabled=instance.status==SetupStatus.active
             instance.task.save()
 
-'''
-class Setup(models.Model):
-    class Meta:
-        verbose_name='Setup'
-        verbose_name_plural='Setups'
-    class TimeInterval(models.TextChoices):
-        one_min = '1 min', _('1 min')
-        five_mins = '5 mins', _('5 mins')
-        one_hour = '1 hour', _('1 hour')
-    class SetupStatus(models.TextChoices):
-        active = 'Active', _('Active')
-        disabled = 'Disabled', _('Disabled')
-    title=models.CharField(max_length=70,blank=False)
-    status = ChoiceField(SetupStatus.choices, default=SetupStatus.active)
-    created_at = models.DateTimeField(auto_now_add=True)
-'''

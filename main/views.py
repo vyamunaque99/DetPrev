@@ -1,10 +1,10 @@
 from django.http.response import FileResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render,get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .forms import uploadDatasetForm, conformanceCheckingForm
-from .models import ConformanceChecking, Dataset
+from .forms import stakeholderListDetailForm, uploadDatasetForm, conformanceCheckingForm, stakeholderForm, stakeholderListForm
+from .models import ConformanceChecking, Dataset, Stakeholder, StakeholderList, StakeholderListDetail
 import pandas as pd
 import json
 import os
@@ -260,5 +260,80 @@ def process_monitoring_list_view(request):
 
 @login_required
 def process_monitoring_delete(request, username, id):
-
     return redirect('/process_monitoring_list')
+
+@login_required
+def stakeholder_view(request):
+    if request.method == 'GET':
+        stakeholders = Stakeholder.objects.all()
+        context = {'stakeholders': stakeholders}
+        return render(request,'stakeholder_view.html',context)
+
+@login_required
+def stakeholder_create_or_update(request,stakeholder_id = None):
+    if stakeholder_id is not None:
+        stakeholder=Stakeholder.objects.get(id=stakeholder_id)
+        form=stakeholderForm(request.POST or None,instance=stakeholder)
+    else:
+        form=stakeholderForm(request.POST or None)
+    if request.method == 'GET':      
+        context = {'form':form}
+        return render(request,'stakeholder_create_or_update.html',context)
+    else:    
+        if form.is_valid():
+            form.save()
+        return redirect('/stakeholder')
+
+@login_required
+def stakeholder_delete(request,stakeholder_id):
+    if request.method=='POST':
+        stakeholder=Stakeholder.objects.get(id=stakeholder_id)
+        stakeholder.delete()
+        return redirect('/stakeholder')
+
+@login_required
+def stakeholder_list_view(request):
+    if request.method == 'GET':
+        stakeholder_list = StakeholderList.objects.all()
+        context = {'stakeholder_list': stakeholder_list}
+        return render(request,'stakeholder_list_view.html',context)
+
+@login_required
+def stakeholder_list_create_or_update(request,stakeholder_list_id = None):
+    if stakeholder_list_id is not None:
+        stakeholder_list=StakeholderList.objects.get(id=stakeholder_list_id)
+        form=stakeholderListForm(request.POST or None,instance=stakeholder_list)
+    else:
+        form=stakeholderListForm(request.POST or None)
+    if request.method == 'GET':      
+        context = {'form':form}
+        return render(request,'stakeholder_list_create_or_update.html',context)
+    else:    
+        if form.is_valid():
+            form.save()
+        return redirect('/stakeholder_list')
+
+@login_required
+def stakeholder_list_detail_view(request):
+    if request.method == 'GET':
+        stakeholder_list_detail = StakeholderListDetail.objects.all()
+        context = {'stakeholder_list_detail': stakeholder_list_detail}
+        return render(request,'stakeholder_list_detail_view.html',context)
+
+@login_required
+def stakeholder_list_detail_create_or_update(request,stakeholder_list_detail_id = None):
+    if stakeholder_list_detail_id is not None:
+        stakeholder_list_detail=StakeholderList.objects.get(id=stakeholder_list_detail_id)
+        form=stakeholderListDetailForm(request.POST or None,instance=stakeholder_list_detail)
+    else:
+        form=stakeholderListDetailForm(request.POST or None)
+    if request.method == 'GET':      
+        context = {'form':form}
+        return render(request,'stakeholder_list_detail_create_or_update.html',context)
+    else:
+        print(request.POST['stakeholder_list'])
+        stakeholder=Stakeholder.objects.get(id=int(request.POST['stakeholder']))
+        stakeholder_list=StakeholderList.objects.get(id=int(request.POST['stakeholder_list']))
+        stakeholder_list_detail=StakeholderListDetail(list_name=stakeholder_list,stakeholder_name=stakeholder)
+        stakeholder_list_detail.save()
+        return redirect('/stakeholder_list_detail')

@@ -1,7 +1,7 @@
 from urllib import request
 from django import forms
 from matplotlib import widgets
-from .models import Dataset
+from .models import Dataset, Stakeholder, StakeholderList, StakeholderListDetail
 
 frecuency_choices =(
     ('Minutos', 'Minutos'),
@@ -37,5 +37,33 @@ class conformanceCheckingForm(forms.Form):
     log_file.widget.attrs.update({'class':'form-control'})
     port_number.widget.attrs.update({'class':'form-control','value':'22'})
     ssh_pub_key.widget.attrs.update({'class':'form-control'})
-    #Inicializacion de clase
-    
+
+class stakeholderForm(forms.ModelForm):
+    name=forms.CharField()
+    email=forms.EmailField()
+    #Decoradores de forms
+    name.widget.attrs.update({'class':'form-control'})
+    email.widget.attrs.update({'class':'form-control'})
+    class Meta:
+            model = Stakeholder
+            fields = '__all__'
+
+class stakeholderListForm(forms.ModelForm):
+    name=forms.CharField()
+    #Decoradores de forms
+    name.widget.attrs.update({'class':'form-control'})
+    class Meta:
+            model = StakeholderList
+            fields = '__all__'
+
+class stakeholderListDetailForm(forms.ModelForm):
+    #def __init__(self,user,*args,**kwargs):
+    #    super(stakeholderListDetailForm,self).__init__(*args, **kwargs)
+    stakeholder_list=forms.ModelChoiceField(queryset=StakeholderList.objects.all(),empty_label=None)
+    stakeholder=forms.ModelChoiceField(queryset=Stakeholder.objects.all(),empty_label=None)
+    #Decoradores de forms
+    stakeholder_list.widget.attrs.update({'class':'form-control'})
+    stakeholder.widget.attrs.update({'class':'form-control'})
+    class Meta:
+            model = StakeholderListDetail
+            fields = '__all__'

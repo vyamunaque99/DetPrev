@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="main-card mb-3 card">
+    <div class="card-body">
+        <form class="" method="POST">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="col-md-6">
+                    <div class="position-relative form-group"><label>Nombre:</label>{{form.name}}</div>
+                </div>
+                <div class="col-md-6">
+                    <div class="position-relative form-group"><label>Email:</label>{{form.email}}</div>
+                </div>
+            </div>
+            <div class="form-row mt-3">
+            <button type="submit" class="form-control btn btn-primary submit px-3">Agregar stakeholder</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

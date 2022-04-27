@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="col" align="right">
+    <form action="/stakeholder_list/create_or_update">
+        <button type="submit" class="btn btn-info mb-3">Agregar Lista de Stakeholders</button>
+    </form>
+</div>
+<div class="main-card mb-3 card">
+
+    <div class="card-body">
+        <table class="mb-0 table" style="overflow-x:auto;">
+            <thead>
+                <tr>
+                    <th>List ID</th>
+                    <th>Nombre</th>
+                    <th>Editar</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in stakeholder_list %}
+                <tr>
+                    <td>{{item.id}}</td>
+                    <td>{{item.name}}</td>
+                    <td>
+                        <form action="/stakeholder_list/create_or_update/{{item.id}}" method="get"><button type="submit"
+                                class="btn btn-info">Editar</button></form>
+                    </td>
+                    <td>
+                        <form action="/stakeholder_list/delete/{{item.id}}/" method="post">{% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
