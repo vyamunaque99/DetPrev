@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .forms import stakeholderListDetailForm, uploadDatasetForm, conformanceCheckingForm, stakeholderForm, stakeholderListForm
-from .models import ConformanceChecking, Dataset, Stakeholder, StakeholderList, StakeholderListDetail
+from .models import ConformanceChecking, ConformanceCheckingDetail, Dataset, Stakeholder, StakeholderList, StakeholderListDetail
 import pandas as pd
 import json
 import os
@@ -247,12 +247,14 @@ def process_monitoring_view(request):
         log_file = request.POST['log_file']
         port_number = request.POST['port_number']
         ssh_pub_key = request.POST['ssh_pub_key']
+        stakeholder_list = request.POST['stakeholder_list']
         process_object = Dataset.objects.get(name=process)
-        print(process_object)
+        stakeholder_list_object=StakeholderList.objects.get(id=stakeholder_list)
+        print(stakeholder_list)
         conformanceChecking = ConformanceChecking.objects.create(
             start_time=start_time, start_date=start_date, process=process_object, frecuency=frecuency,
             frecuency_time=frecuency_time, os_user=os_user, user_ip=user_ip,
-            log_file=log_file, port_number=port_number, ssh_pub_key=ssh_pub_key)
+            log_file=log_file, port_number=port_number, ssh_pub_key=ssh_pub_key,stakeholder_list=stakeholder_list_object)
         conformanceChecking.save()
         return redirect('/')
 
@@ -262,6 +264,14 @@ def process_monitoring_list_view(request):
     conformance_checking = ConformanceChecking.objects.all()
     context = {'conformance_checking': conformance_checking}
     return render(request, 'process_list.html', context)
+
+
+@login_required
+def process_monitoring_detail_list_view(request,conformance_checking_id):
+    conformance_checking = ConformanceChecking.objects.get(id=conformance_checking_id)
+    conformance_checking_detail = ConformanceCheckingDetail.objects.filter(process=conformance_checking)
+    context = {'conformance_checking_detail': conformance_checking_detail}
+    return render(request, 'process_list_detail_view.html', context)
 
 
 @login_required

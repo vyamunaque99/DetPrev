@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="main-card mb-3 card">
+    <div class="card-body">
+        <table class="mb-0 table" style="overflow-x:auto;">
+            <thead>
+                <tr>
+                    <th>Detail ID</th>
+                    <th>Status</th>
+                    <th>Proceso</th>
+                    <th>Tiempo de ejecucion</th>
+                    <th>Actividades</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in conformance_checking_detail %}
+                <tr>
+                    <td>{{item.id}}</td>
+                    <td>{{item.status}}</td>
+                    <td>{{item.process.process.name}}</td>
+                    <td>{{item.execution_time}}</td>
+                    <td>{{item.node}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

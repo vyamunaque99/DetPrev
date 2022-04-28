@@ -15,6 +15,7 @@ urlpatterns = [
     path('dataset_delete/<str:username>/<str:dataset_name>/',dataset_delete),
     path('process_monitoring/',process_monitoring_view),
     path('process_monitoring_list/',process_monitoring_list_view),
+    path('process_monitoring_list/<int:conformance_checking_id>/',process_monitoring_detail_list_view),
     path('stakeholder/',stakeholder_view),
     path('stakeholder/create_or_update/',stakeholder_create_or_update),
     path('stakeholder/create_or_update/<int:stakeholder_id>/',stakeholder_create_or_update),

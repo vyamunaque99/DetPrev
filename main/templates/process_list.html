@@ -11,6 +11,7 @@
                     <th>Repeticion</th>
                     <th>Usuario OS</th>
                     <th>IP</th>
+                    <th>Detalles</th>
                     <th>Eliminar</th>
                 </tr>
             </thead>
@@ -23,9 +24,13 @@
                     <td>{{item.os_user}}</td>
                     <td>{{item.user_ip}}</td>
                     <td>
+                        <form action="/process_monitoring_list/{{item.id}}" method="get"><button
+                                type="submit" class="btn btn-info">Detalle</button></form>
+                    </td>
+                    <td>
                         <form action="/process_monitoring_delete/{{user.get_username}}/{{item.id}}" method="get"><button
                                 type="submit" class="btn btn-danger">Eliminar Tarea</button></form>
-                    </td>
+                    </td>                    
                 </tr>
                 {% endfor %}
             </tbody>

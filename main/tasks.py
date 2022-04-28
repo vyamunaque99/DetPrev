@@ -1,12 +1,17 @@
+from email import message
 import paramiko
 import pm4py
-
 import pandas as pd
-from pm4py.algo.conformance.tokenreplay import algorithm as token_replay
+import smtplib
 
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from pm4py.algo.conformance.tokenreplay import algorithm as token_replay
+from django.utils import timezone
+from datetime import time
 from celery import shared_task
 from io import StringIO
-from .models import ConformanceChecking
+from .models import ConformanceChecking, ConformanceCheckingDetail, StakeholderListDetail
 
 @shared_task(name='conformance_cheking_task')
 def conformance_cheking_task(conformance_checking_id):
@@ -36,5 +41,40 @@ def conformance_cheking_task(conformance_checking_id):
     #Ejecucion Conformance Checking
     petri_net_model,initial_marking,final_marking=pm4py.read_petri_net('main/assets/{}/{}/process.ptn'.format(username, process))
     replayed_traces = token_replay.apply(event_log, petri_net_model, initial_marking, final_marking)
+    traces=[d['trace_is_fit'] for d in replayed_traces]
+    indices = [i for i, x in enumerate(traces) if x == False]
+    if indices:
+        nodes=[(replayed_traces[i]['transitions_with_problems'][0].label) for i in indices]
+        nodes_detail=', '.join([str(elem) for elem in nodes])
+        #Almacenamiento de detalle
+        conformance_checking_detail=ConformanceCheckingDetail.objects.create(execution_time=timezone.now(),process=conformance_checking,status='Desviacion encontrada',node=nodes_detail)
+        conformance_checking_detail.save()
+        #Envio de correo
+        #Inicializacion de objeto
+        msg = MIMEMultipart()
+        message='Error en el proceso {0} a la hora {1} en la actividad {2}'.format(process,timezone.now(),nodes_detail)
+        recipients=list(StakeholderListDetail.objects.filter(list_name=conformance_checking.stakeholder_list))
+        recipients_list=[i.stakeholder_name.email for i in recipients]
+        #Configuracion de parametros
+        print(recipients_list)
+        password = "Upc12345"
+        msg['From'] = "detprev2021218@gmail.com"
+        msg['To'] = ", ".join(recipients_list)
+        msg['Subject'] = "Anomalia detectada - DetPrev"
+        # add in the message body
+        msg.attach(MIMEText(message, 'plain'))
+        #Encendido de server
+        server = smtplib.SMTP('smtp.gmail.com: 587')
+        server.starttls()
+        # Login Credentials for sending the mail
+        server.login(msg['From'], password)
+        #Envio de mail
+        server.sendmail(msg['From'], msg['To'], msg.as_string())
+        #Cierre de server
+        server.quit()
     #Cierre de cliente
+    else:
+        #Almacenamiento de detalle
+        conformance_checking_detail=ConformanceCheckingDetail.objects.create(execution_time=timezone.now(),process=conformance_checking,status='Desviacion encontrada',node='No hubo errores')
+        conformance_checking_detail.save()
     ssh.close()

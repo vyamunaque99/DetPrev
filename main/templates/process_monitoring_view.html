@@ -6,11 +6,14 @@
         <form class="" method="POST" action="/process_monitoring/">
             {% csrf_token %}
             <div class="form-row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="position-relative form-group"><label>Fecha de inicio:</label>{{form.start_date}}</div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="position-relative form-group"><label>Hora de inicio:</label>{{form.start_time}}</div>
+                </div>
+                <div class="col-md-4">
+                    <div class="position-relative form-group"><label>Grupo:</label>{{form.stakeholder_list}}</div>
                 </div>
             </div>
             <div class="form-row">

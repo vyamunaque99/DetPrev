@@ -18,6 +18,8 @@ class conformanceCheckingForm(forms.Form):
         super(conformanceCheckingForm, self).__init__(*args, **kwargs)
         self.fields['process']=forms.ChoiceField(choices=Dataset.objects.filter(user=user).values_list('name','name'))
         self.fields['process'].widget.attrs.update({'class':'form-control'})
+        self.fields['stakeholder_list']=forms.ChoiceField(choices=StakeholderList.objects.all().values_list('id','name'))
+        self.fields['stakeholder_list'].widget.attrs.update({'class':'form-control'})
     start_time= forms.TimeField()
     start_date= forms.DateField()
     frecuency= forms.ChoiceField(choices=frecuency_choices)

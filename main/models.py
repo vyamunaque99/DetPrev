@@ -1,5 +1,6 @@
 from importlib.machinery import ModuleSpec
 import json
+from statistics import mode
 
 from django.db import models
 from django.db.models.base import Model
@@ -16,6 +17,21 @@ class Dataset(models.Model):
     name=models.CharField(max_length=30,unique=True)
     user=models.ForeignKey(User,on_delete=models.CASCADE)
 
+class Stakeholder(models.Model):
+    name=models.CharField(max_length=50)
+    email=models.EmailField()
+    def __str__(self):
+        return u'{0}'.format(self.name)
+
+class StakeholderList(models.Model):
+    name=models.CharField(max_length=50)
+    def __str__(self):
+        return u'{0}'.format(self.name)
+
+class StakeholderListDetail(models.Model):
+    list_name=models.ForeignKey(StakeholderList,on_delete=models.CASCADE)
+    stakeholder_name=models.ForeignKey(Stakeholder,on_delete=models.CASCADE)
+
 class ConformanceChecking(models.Model):
     start_date=models.DateField()
     start_time=models.TimeField()
@@ -29,6 +45,7 @@ class ConformanceChecking(models.Model):
     ssh_pub_key=models.CharField(max_length=2000)
     status=EnumChoiceField(SetupStatus,default=SetupStatus.active)
     task=models.OneToOneField(PeriodicTask,on_delete=models.CASCADE,null=True,blank=True)
+    stakeholder_list=models.ForeignKey(StakeholderList,on_delete=models.CASCADE)
     def setup_task(self):
         frecuency_interval=IntervalSchedule()
         if self.frecuency=='Minutos':
@@ -47,20 +64,11 @@ class ConformanceChecking(models.Model):
         )
         self.save()
 
-class Stakeholder(models.Model):
-    name=models.CharField(max_length=50)
-    email=models.EmailField()
-    def __str__(self):
-        return u'{0}'.format(self.name)
-
-class StakeholderList(models.Model):
-    name=models.CharField(max_length=50)
-    def __str__(self):
-        return u'{0}'.format(self.name)
-
-class StakeholderListDetail(models.Model):
-    list_name=models.ForeignKey(StakeholderList,on_delete=models.CASCADE)
-    stakeholder_name=models.ForeignKey(Stakeholder,on_delete=models.CASCADE)
+class ConformanceCheckingDetail(models.Model):
+    execution_time=models.TimeField()
+    process=models.ForeignKey(ConformanceChecking,on_delete=models.CASCADE)
+    status=models.CharField(max_length=20)
+    node=models.CharField(max_length=50)
 
 @receiver(post_save,sender=ConformanceChecking)
 def periodic_task_creation(sender,instance,created,**kwargs):
