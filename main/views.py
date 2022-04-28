@@ -1,5 +1,7 @@
+import base64
+from pdb import pm
 from django.http.response import FileResponse
-from django.shortcuts import redirect, render,get_object_or_404
+from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -189,20 +191,24 @@ def process_generation_detail(request, username, dataset_name):
         event_log, case_id='case_id', activity_key='activity', timestamp_key='timestamp')
     process_tree = pm4py.discover_tree_inductive(event_log)
     bpmn_model = pm4py.convert_to_bpmn(process_tree)
-    petri_net_model,initial_marking,final_marking = pm4py.convert_to_petri_net(process_tree)
+    map=pm4py.discover_heuristics_net(event_log)
+    petri_net_model, initial_marking, final_marking = pm4py.convert_to_petri_net(
+        process_tree)
     # Escritura de BPMN
     pm4py.write_bpmn(bpmn_model, 'main/assets/{}/{}/process.bpmn'.format(
         username, dataset_name), enable_layout=True)
     # Escritura de Petri Net
     pm4py.write_petri_net(
-        petri_net_model,initial_marking,final_marking,'main/assets/{}/{}/process.ptn'.format(username, dataset_name))
+        petri_net_model, initial_marking, final_marking, 'main/assets/{}/{}/process.ptn'.format(username, dataset_name))
     pm4py.save_vis_bpmn(
         bpmn_model, 'main/assets/{}/{}/process.png'.format(username, dataset_name))
-    img = open(
-        'main/assets/{}/{}/process.png'.format(username, dataset_name), 'rb')
-    diagramUrl = '/assets/{}/{}/process.bpmn'.format(username, dataset_name)
-    context = {'diagramUrl': diagramUrl}
-    return render(request, 'process_view.html')
+    # Escritura process map
+    pm4py.save_vis_heuristics_net(map,'main/assets/{}/{}/process_map.png'.format(username, dataset_name))
+    with open('main/assets/{}/{}/process_map.png'.format(username, dataset_name), 'rb') as img:
+        img=base64.b64encode(img.read()).decode('utf-8')
+    #diagramUrl = '/assets/{}/{}/process.bpmn'.format(username, dataset_name)
+    context = {'img': img}
+    return render(request, 'process_view.html',context)
 
 
 @login_required
@@ -262,78 +268,91 @@ def process_monitoring_list_view(request):
 def process_monitoring_delete(request, username, id):
     return redirect('/process_monitoring_list')
 
+
 @login_required
 def stakeholder_view(request):
     if request.method == 'GET':
         stakeholders = Stakeholder.objects.all()
         context = {'stakeholders': stakeholders}
-        return render(request,'stakeholder_view.html',context)
+        return render(request, 'stakeholder_view.html', context)
+
 
 @login_required
-def stakeholder_create_or_update(request,stakeholder_id = None):
+def stakeholder_create_or_update(request, stakeholder_id=None):
     if stakeholder_id is not None:
-        stakeholder=Stakeholder.objects.get(id=stakeholder_id)
-        form=stakeholderForm(request.POST or None,instance=stakeholder)
+        stakeholder = Stakeholder.objects.get(id=stakeholder_id)
+        form = stakeholderForm(request.POST or None, instance=stakeholder)
     else:
-        form=stakeholderForm(request.POST or None)
-    if request.method == 'GET':      
-        context = {'form':form}
-        return render(request,'stakeholder_create_or_update.html',context)
-    else:    
+        form = stakeholderForm(request.POST or None)
+    if request.method == 'GET':
+        context = {'form': form}
+        return render(request, 'stakeholder_create_or_update.html', context)
+    else:
         if form.is_valid():
             form.save()
         return redirect('/stakeholder')
 
+
 @login_required
-def stakeholder_delete(request,stakeholder_id):
-    if request.method=='POST':
-        stakeholder=Stakeholder.objects.get(id=stakeholder_id)
+def stakeholder_delete(request, stakeholder_id):
+    if request.method == 'POST':
+        stakeholder = Stakeholder.objects.get(id=stakeholder_id)
         stakeholder.delete()
         return redirect('/stakeholder')
+
 
 @login_required
 def stakeholder_list_view(request):
     if request.method == 'GET':
         stakeholder_list = StakeholderList.objects.all()
         context = {'stakeholder_list': stakeholder_list}
-        return render(request,'stakeholder_list_view.html',context)
+        return render(request, 'stakeholder_list_view.html', context)
+
 
 @login_required
-def stakeholder_list_create_or_update(request,stakeholder_list_id = None):
+def stakeholder_list_create_or_update(request, stakeholder_list_id=None):
     if stakeholder_list_id is not None:
-        stakeholder_list=StakeholderList.objects.get(id=stakeholder_list_id)
-        form=stakeholderListForm(request.POST or None,instance=stakeholder_list)
+        stakeholder_list = StakeholderList.objects.get(id=stakeholder_list_id)
+        form = stakeholderListForm(
+            request.POST or None, instance=stakeholder_list)
     else:
-        form=stakeholderListForm(request.POST or None)
-    if request.method == 'GET':      
-        context = {'form':form}
-        return render(request,'stakeholder_list_create_or_update.html',context)
-    else:    
+        form = stakeholderListForm(request.POST or None)
+    if request.method == 'GET':
+        context = {'form': form}
+        return render(request, 'stakeholder_list_create_or_update.html', context)
+    else:
         if form.is_valid():
             form.save()
         return redirect('/stakeholder_list')
+
 
 @login_required
 def stakeholder_list_detail_view(request):
     if request.method == 'GET':
         stakeholder_list_detail = StakeholderListDetail.objects.all()
         context = {'stakeholder_list_detail': stakeholder_list_detail}
-        return render(request,'stakeholder_list_detail_view.html',context)
+        return render(request, 'stakeholder_list_detail_view.html', context)
+
 
 @login_required
-def stakeholder_list_detail_create_or_update(request,stakeholder_list_detail_id = None):
+def stakeholder_list_detail_create_or_update(request, stakeholder_list_detail_id=None):
     if stakeholder_list_detail_id is not None:
-        stakeholder_list_detail=StakeholderList.objects.get(id=stakeholder_list_detail_id)
-        form=stakeholderListDetailForm(request.POST or None,instance=stakeholder_list_detail)
+        stakeholder_list_detail = StakeholderList.objects.get(
+            id=stakeholder_list_detail_id)
+        form = stakeholderListDetailForm(
+            request.POST or None, instance=stakeholder_list_detail)
     else:
-        form=stakeholderListDetailForm(request.POST or None)
-    if request.method == 'GET':      
-        context = {'form':form}
-        return render(request,'stakeholder_list_detail_create_or_update.html',context)
+        form = stakeholderListDetailForm(request.POST or None)
+    if request.method == 'GET':
+        context = {'form': form}
+        return render(request, 'stakeholder_list_detail_create_or_update.html', context)
     else:
         print(request.POST['stakeholder_list'])
-        stakeholder=Stakeholder.objects.get(id=int(request.POST['stakeholder']))
-        stakeholder_list=StakeholderList.objects.get(id=int(request.POST['stakeholder_list']))
-        stakeholder_list_detail=StakeholderListDetail(list_name=stakeholder_list,stakeholder_name=stakeholder)
+        stakeholder = Stakeholder.objects.get(
+            id=int(request.POST['stakeholder']))
+        stakeholder_list = StakeholderList.objects.get(
+            id=int(request.POST['stakeholder_list']))
+        stakeholder_list_detail = StakeholderListDetail(
+            list_name=stakeholder_list, stakeholder_name=stakeholder)
         stakeholder_list_detail.save()
         return redirect('/stakeholder_list_detail')

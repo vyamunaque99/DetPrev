@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<pnml>
+  <net id="net1" type="http://www.pnml.org/version-2009/grammar/pnmlcoremodel">
+    <page id="n0">
+      <place id="p_4">
+        <name>
+          <text>p_4</text>
+        </name>
+      </place>
+      <place id="sink">
+        <name>
+          <text>sink</text>
+        </name>
+      </place>
+      <place id="source">
+        <name>
+          <text>source</text>
+        </name>
+        <initialMarking>
+          <text>1</text>
+        </initialMarking>
+      </place>
+      <place id="p_3">
+        <name>
+          <text>p_3</text>
+        </name>
+      </place>
+      <place id="p_5">
+        <name>
+          <text>p_5</text>
+        </name>
+      </place>
+      <place id="p_6">
+        <name>
+          <text>p_6</text>
+        </name>
+      </place>
+      <place id="p_7">
+        <name>
+          <text>p_7</text>
+        </name>
+      </place>
+      <place id="p_8">
+        <name>
+          <text>p_8</text>
+        </name>
+      </place>
+      <transition id="5841f010-e95e-4b10-8e7e-1782d6f23f1a">
+        <name>
+          <text>Registrar datos personales</text>
+        </name>
+      </transition>
+      <transition id="9bb9a8a3-77d3-44b8-a348-57b5f53ad36b">
+        <name>
+          <text>Solicitar verificacion</text>
+        </name>
+      </transition>
+      <transition id="7687c5be-1806-46b5-b2ac-95980cadc733">
+        <name>
+          <text>Firmar documentos</text>
+        </name>
+      </transition>
+      <transition id="3b699967-9d95-4bd7-a279-5c6b320fbe29">
+        <name>
+          <text>Registrar datos del producto</text>
+        </name>
+      </transition>
+      <transition id="fc07d09a-162e-43cb-988f-76dceb6ec1ba">
+        <name>
+          <text>Entrega de documentos personales</text>
+        </name>
+      </transition>
+      <transition id="8d928031-5770-4525-b3cc-114f41d5e05a">
+        <name>
+          <text>Solicitar documentos personales</text>
+        </name>
+      </transition>
+      <transition id="ec451f9a-1620-42b1-8e47-bcf7f88e16c1">
+        <name>
+          <text>Verificar Expediente</text>
+        </name>
+      </transition>
+      <arc id="139706383291680" source="source" target="5841f010-e95e-4b10-8e7e-1782d6f23f1a"/>
+      <arc id="139706393487392" source="p_5" target="7687c5be-1806-46b5-b2ac-95980cadc733"/>
+      <arc id="139709263683936" source="p_6" target="fc07d09a-162e-43cb-988f-76dceb6ec1ba"/>
+      <arc id="139709263685376" source="fc07d09a-162e-43cb-988f-76dceb6ec1ba" target="p_7"/>
+      <arc id="139709263593088" source="p_7" target="9bb9a8a3-77d3-44b8-a348-57b5f53ad36b"/>
+      <arc id="139706361422128" source="3b699967-9d95-4bd7-a279-5c6b320fbe29" target="p_4"/>
+      <arc id="139706361423184" source="p_3" target="3b699967-9d95-4bd7-a279-5c6b320fbe29"/>
+      <arc id="139706383325360" source="5841f010-e95e-4b10-8e7e-1782d6f23f1a" target="p_3"/>
+      <arc id="139706361423568" source="p_4" target="8d928031-5770-4525-b3cc-114f41d5e05a"/>
+      <arc id="139706361422608" source="8d928031-5770-4525-b3cc-114f41d5e05a" target="p_5"/>
+      <arc id="139706393486384" source="7687c5be-1806-46b5-b2ac-95980cadc733" target="p_6"/>
+      <arc id="139709263589488" source="9bb9a8a3-77d3-44b8-a348-57b5f53ad36b" target="p_8"/>
+      <arc id="139709263012720" source="p_8" target="ec451f9a-1620-42b1-8e47-bcf7f88e16c1"/>
+      <arc id="139706393610512" source="ec451f9a-1620-42b1-8e47-bcf7f88e16c1" target="sink"/>
+    </page>
+    <finalmarkings>
+      <marking>
+        <place idref="sink">
+          <text>1</text>
+        </place>
+      </marking>
+    </finalmarkings>
+  </net>
+</pnml>
