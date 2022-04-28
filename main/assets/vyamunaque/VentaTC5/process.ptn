@@ -15,19 +15,14 @@
           <text>sink</text>
         </name>
       </place>
+      <place id="p_5">
+        <name>
+          <text>p_5</text>
+        </name>
+      </place>
       <place id="p_3">
         <name>
           <text>p_3</text>
-        </name>
-      </place>
-      <place id="p_10">
-        <name>
-          <text>p_10</text>
-        </name>
-      </place>
-      <place id="p_12">
-        <name>
-          <text>p_12</text>
         </name>
       </place>
       <place id="p_4">
@@ -35,9 +30,14 @@
           <text>p_4</text>
         </name>
       </place>
-      <place id="p_5">
+      <place id="p_9">
         <name>
-          <text>p_5</text>
+          <text>p_9</text>
+        </name>
+      </place>
+      <place id="p_12">
+        <name>
+          <text>p_12</text>
         </name>
       </place>
       <place id="p_6">
@@ -55,9 +55,9 @@
           <text>p_8</text>
         </name>
       </place>
-      <place id="p_9">
+      <place id="p_10">
         <name>
-          <text>p_9</text>
+          <text>p_10</text>
         </name>
       </place>
       <place id="p_11">
@@ -65,97 +65,97 @@
           <text>p_11</text>
         </name>
       </place>
-      <transition id="8b839ee6-ec57-4e59-87d9-2d93b8fdb692">
-        <name>
-          <text>Solicitar verificacion</text>
-        </name>
-      </transition>
-      <transition id="94683ceb-1ec5-4439-8e74-d73728f42287">
-        <name>
-          <text>Verificar Expediente</text>
-        </name>
-      </transition>
-      <transition id="d335ba78-ffda-43ab-a930-94fc68ded6eb">
-        <name>
-          <text>Validar Expediente</text>
-        </name>
-      </transition>
-      <transition id="ac7b0e59-d78f-473b-a4a2-8c998bed747c">
-        <name>
-          <text>Emitir instrucciones de TC</text>
-        </name>
-      </transition>
-      <transition id="635e8603-d25a-47a2-bdc7-6e35faaa3c60">
-        <name>
-          <text>Activar TC</text>
-        </name>
-      </transition>
-      <transition id="e01e8997-ef23-4333-aa6a-44e4ef14e57b">
-        <name>
-          <text>Generar Resolucion</text>
-        </name>
-      </transition>
-      <transition id="082eccf3-d94b-4cc4-8d0b-f578f22162a7">
-        <name>
-          <text>Enviar Resolucion</text>
-        </name>
-      </transition>
-      <transition id="41954158-9f36-4395-8b7f-23fc87b7a769">
-        <name>
-          <text>Registrar datos personales</text>
-        </name>
-      </transition>
-      <transition id="079920da-4109-4f88-a7fc-d91eb8cabca1">
-        <name>
-          <text>Firmar documentos</text>
-        </name>
-      </transition>
-      <transition id="1c458579-0f21-452a-aa51-d6a31721a2c2">
-        <name>
-          <text>Entrega de documentos personales</text>
-        </name>
-      </transition>
-      <transition id="b2cdf747-7f1d-4a23-8e9e-f42de26fcae6">
-        <name>
-          <text>Solicitar documentos personales</text>
-        </name>
-      </transition>
-      <transition id="45624b8c-d989-48a7-b306-4d885fca9140">
+      <transition id="b39c9cb7-1796-4a46-adc0-5db2e12d3c62">
         <name>
           <text>Registrar datos del producto</text>
         </name>
       </transition>
-      <transition id="ad6a0f9a-cd72-4665-8474-7e21d32e96f6">
+      <transition id="4baa939e-02a1-44b5-b1da-85b3b2638766">
+        <name>
+          <text>Validar Expediente</text>
+        </name>
+      </transition>
+      <transition id="7dbe1366-73bf-420b-86f4-f9bfb0c255dc">
+        <name>
+          <text>Emitir instrucciones de TC</text>
+        </name>
+      </transition>
+      <transition id="24c91286-47da-422d-a733-5ed2902ef085">
+        <name>
+          <text>Activar TC</text>
+        </name>
+      </transition>
+      <transition id="da7fa366-3aad-40bb-8f1b-9cabaa8f09d3">
+        <name>
+          <text>Generar Resolucion</text>
+        </name>
+      </transition>
+      <transition id="66082e9f-52f0-46b5-943a-5f8b522c1fbd">
+        <name>
+          <text>Enviar Resolucion</text>
+        </name>
+      </transition>
+      <transition id="9ddc78bf-58b1-470d-9e0c-1db27eb70ad8">
+        <name>
+          <text>Registrar datos personales</text>
+        </name>
+      </transition>
+      <transition id="5f8d0919-5310-423f-b49a-e6d65088da6b">
+        <name>
+          <text>Entrega de documentos personales</text>
+        </name>
+      </transition>
+      <transition id="28c65f31-2c3c-4505-b49d-d323f8ed6ce9">
+        <name>
+          <text>Firmar documentos</text>
+        </name>
+      </transition>
+      <transition id="db3b5694-c4da-4632-8d1d-a6da657fa4f2">
+        <name>
+          <text>Solicitar documentos personales</text>
+        </name>
+      </transition>
+      <transition id="d02594b2-767f-423a-a212-2aad032e3f72">
         <name>
           <text>Preparar expediente</text>
         </name>
       </transition>
-      <arc id="139706365363200" source="8b839ee6-ec57-4e59-87d9-2d93b8fdb692" target="p_9"/>
-      <arc id="139709261357312" source="p_8" target="d335ba78-ffda-43ab-a930-94fc68ded6eb"/>
-      <arc id="139709261358080" source="p_11" target="635e8603-d25a-47a2-bdc7-6e35faaa3c60"/>
-      <arc id="139709261358464" source="p_10" target="e01e8997-ef23-4333-aa6a-44e4ef14e57b"/>
-      <arc id="139706365364496" source="p_3" target="45624b8c-d989-48a7-b306-4d885fca9140"/>
-      <arc id="139709261357984" source="ac7b0e59-d78f-473b-a4a2-8c998bed747c" target="p_11"/>
-      <arc id="139709261358752" source="p_12" target="082eccf3-d94b-4cc4-8d0b-f578f22162a7"/>
-      <arc id="139706365365936" source="p_7" target="ad6a0f9a-cd72-4665-8474-7e21d32e96f6"/>
-      <arc id="139706365364016" source="source" target="41954158-9f36-4395-8b7f-23fc87b7a769"/>
-      <arc id="139706365364784" source="p_4" target="b2cdf747-7f1d-4a23-8e9e-f42de26fcae6"/>
-      <arc id="139706365365168" source="p_5" target="079920da-4109-4f88-a7fc-d91eb8cabca1"/>
-      <arc id="139706365365552" source="p_6" target="1c458579-0f21-452a-aa51-d6a31721a2c2"/>
-      <arc id="139706365363008" source="p_8" target="8b839ee6-ec57-4e59-87d9-2d93b8fdb692"/>
-      <arc id="139709261357120" source="94683ceb-1ec5-4439-8e74-d73728f42287" target="sink"/>
-      <arc id="139709261357504" source="d335ba78-ffda-43ab-a930-94fc68ded6eb" target="p_10"/>
-      <arc id="139709261358272" source="635e8603-d25a-47a2-bdc7-6e35faaa3c60" target="sink"/>
-      <arc id="139709261358656" source="e01e8997-ef23-4333-aa6a-44e4ef14e57b" target="p_12"/>
-      <arc id="139706365365456" source="079920da-4109-4f88-a7fc-d91eb8cabca1" target="p_6"/>
-      <arc id="139706365363296" source="p_9" target="94683ceb-1ec5-4439-8e74-d73728f42287"/>
-      <arc id="139709261357792" source="p_10" target="ac7b0e59-d78f-473b-a4a2-8c998bed747c"/>
-      <arc id="139709261358944" source="082eccf3-d94b-4cc4-8d0b-f578f22162a7" target="sink"/>
-      <arc id="139706365366128" source="ad6a0f9a-cd72-4665-8474-7e21d32e96f6" target="p_8"/>
-      <arc id="139706365364208" source="41954158-9f36-4395-8b7f-23fc87b7a769" target="p_3"/>
-      <arc id="139706365364592" source="45624b8c-d989-48a7-b306-4d885fca9140" target="p_4"/>
-      <arc id="139706365364976" source="b2cdf747-7f1d-4a23-8e9e-f42de26fcae6" target="p_5"/>
-      <arc id="139706365365744" source="1c458579-0f21-452a-aa51-d6a31721a2c2" target="p_7"/>
+      <transition id="8b231d8d-ce38-4196-96d6-a4592af84f4c">
+        <name>
+          <text>Solicitar verificacion</text>
+        </name>
+      </transition>
+      <transition id="e2c9fca3-fa1f-42a5-ad20-c710e53f18f3">
+        <name>
+          <text>Verificar Expediente</text>
+        </name>
+      </transition>
+      <arc id="139724513610624" source="7dbe1366-73bf-420b-86f4-f9bfb0c255dc" target="p_11"/>
+      <arc id="139724513611392" source="p_12" target="66082e9f-52f0-46b5-943a-5f8b522c1fbd"/>
+      <arc id="139724513599248" source="source" target="9ddc78bf-58b1-470d-9e0c-1db27eb70ad8"/>
+      <arc id="139724513608848" source="d02594b2-767f-423a-a212-2aad032e3f72" target="p_8"/>
+      <arc id="139724513609232" source="p_8" target="8b231d8d-ce38-4196-96d6-a4592af84f4c"/>
+      <arc id="139724513598240" source="p_3" target="b39c9cb7-1796-4a46-adc0-5db2e12d3c62"/>
+      <arc id="139724513609760" source="p_4" target="db3b5694-c4da-4632-8d1d-a6da657fa4f2"/>
+      <arc id="139724513610144" source="4baa939e-02a1-44b5-b1da-85b3b2638766" target="p_10"/>
+      <arc id="139724513610912" source="24c91286-47da-422d-a733-5ed2902ef085" target="sink"/>
+      <arc id="139724513611296" source="da7fa366-3aad-40bb-8f1b-9cabaa8f09d3" target="p_12"/>
+      <arc id="139724513609520" source="p_9" target="e2c9fca3-fa1f-42a5-ad20-c710e53f18f3"/>
+      <arc id="139724513608368" source="p_6" target="5f8d0919-5310-423f-b49a-e6d65088da6b"/>
+      <arc id="139724513608752" source="p_7" target="d02594b2-767f-423a-a212-2aad032e3f72"/>
+      <arc id="139724513610432" source="p_10" target="7dbe1366-73bf-420b-86f4-f9bfb0c255dc"/>
+      <arc id="139724513611584" source="66082e9f-52f0-46b5-943a-5f8b522c1fbd" target="sink"/>
+      <arc id="139724513609424" source="8b231d8d-ce38-4196-96d6-a4592af84f4c" target="p_9"/>
+      <arc id="139724513599440" source="9ddc78bf-58b1-470d-9e0c-1db27eb70ad8" target="p_3"/>
+      <arc id="139724513607888" source="p_5" target="28c65f31-2c3c-4505-b49d-d323f8ed6ce9"/>
+      <arc id="139724513598432" source="b39c9cb7-1796-4a46-adc0-5db2e12d3c62" target="p_4"/>
+      <arc id="139724513609952" source="p_8" target="4baa939e-02a1-44b5-b1da-85b3b2638766"/>
+      <arc id="139724513610720" source="p_11" target="24c91286-47da-422d-a733-5ed2902ef085"/>
+      <arc id="139724513611104" source="p_10" target="da7fa366-3aad-40bb-8f1b-9cabaa8f09d3"/>
+      <arc id="139724513607792" source="db3b5694-c4da-4632-8d1d-a6da657fa4f2" target="p_5"/>
+      <arc id="139724513608176" source="28c65f31-2c3c-4505-b49d-d323f8ed6ce9" target="p_6"/>
+      <arc id="139724513608560" source="5f8d0919-5310-423f-b49a-e6d65088da6b" target="p_7"/>
+      <arc id="139724513609712" source="e2c9fca3-fa1f-42a5-ad20-c710e53f18f3" target="sink"/>
     </page>
     <finalmarkings>
       <marking>
