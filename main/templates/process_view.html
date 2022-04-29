@@ -60,6 +60,7 @@
 <style>
     html,
     body,
+    
     #canvas {
         height: 50%;
         padding: 0;
@@ -78,13 +79,18 @@
         text-align: center;
     }
 
+    .image-container {
+        display: flex;
+        justify-content: center;
+    }
+
     .needs-discussion:not(.djs-connection) .djs-visual> :nth-child(1) {
         stroke: rgba(66, 180, 21, 0.7) !important;
         /* color elements as red */
     }
 </style>
 <h2>Mapa de procesos</h2>
-<div class="main-card mb-3 card"><img src="data:image/png;base64,{{ img }}"></img></div>
+<div class="main-card mb-3 card"><div class="image-container"><img src="data:image/png;base64,{{ img }}" width="500" height="auto"></img></div></div>
 <h2>BPMN</h2>
 <div id="canvas" class="main-card mb-3 card"></div>
 

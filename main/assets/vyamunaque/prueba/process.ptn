@@ -1,0 +1,168 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<pnml>
+  <net id="net1" type="http://www.pnml.org/version-2009/grammar/pnmlcoremodel">
+    <page id="n0">
+      <place id="source">
+        <name>
+          <text>source</text>
+        </name>
+        <initialMarking>
+          <text>1</text>
+        </initialMarking>
+      </place>
+      <place id="p_5">
+        <name>
+          <text>p_5</text>
+        </name>
+      </place>
+      <place id="p_3">
+        <name>
+          <text>p_3</text>
+        </name>
+      </place>
+      <place id="p_4">
+        <name>
+          <text>p_4</text>
+        </name>
+      </place>
+      <place id="p_6">
+        <name>
+          <text>p_6</text>
+        </name>
+      </place>
+      <place id="p_7">
+        <name>
+          <text>p_7</text>
+        </name>
+      </place>
+      <place id="p_8">
+        <name>
+          <text>p_8</text>
+        </name>
+      </place>
+      <place id="p_10">
+        <name>
+          <text>p_10</text>
+        </name>
+      </place>
+      <place id="sink">
+        <name>
+          <text>sink</text>
+        </name>
+      </place>
+      <place id="p_9">
+        <name>
+          <text>p_9</text>
+        </name>
+      </place>
+      <place id="p_11">
+        <name>
+          <text>p_11</text>
+        </name>
+      </place>
+      <place id="p_12">
+        <name>
+          <text>p_12</text>
+        </name>
+      </place>
+      <transition id="f18a5521-83c7-4647-aec0-521b6557230c">
+        <name>
+          <text>Firmar documentos</text>
+        </name>
+      </transition>
+      <transition id="0f7dc1eb-6868-48ef-aa32-89f22901ad0d">
+        <name>
+          <text>Entrega de documentos personales</text>
+        </name>
+      </transition>
+      <transition id="34cb92e0-cf36-47f6-854e-f3e3d95856fd">
+        <name>
+          <text>Preparar expediente</text>
+        </name>
+      </transition>
+      <transition id="1dd8db83-4b68-43a7-be0b-166f8e49d547">
+        <name>
+          <text>Solicitar verificacion</text>
+        </name>
+      </transition>
+      <transition id="d8ad4fed-c8d4-4a26-83c2-295278aaff98">
+        <name>
+          <text>Emitir instrucciones de TC</text>
+        </name>
+      </transition>
+      <transition id="a5e96a17-cfa4-45dd-bd1c-91bc18fecc0c">
+        <name>
+          <text>Activar TC</text>
+        </name>
+      </transition>
+      <transition id="6b5d17ee-1a84-47cc-ae14-a4b7642d9db9">
+        <name>
+          <text>Generar Resolucion</text>
+        </name>
+      </transition>
+      <transition id="155d6bb0-4e77-48ba-b09b-df17d5df3332">
+        <name>
+          <text>Registrar datos personales</text>
+        </name>
+      </transition>
+      <transition id="4017cc24-1c7b-47b2-befe-a9094cbb4ac9">
+        <name>
+          <text>Registrar datos del producto</text>
+        </name>
+      </transition>
+      <transition id="17a22dd0-3384-4d49-bbc0-34479d2c1b06">
+        <name>
+          <text>Solicitar documentos personales</text>
+        </name>
+      </transition>
+      <transition id="a0eafd22-55b3-444d-a852-fcd4ea8ac3d7">
+        <name>
+          <text>Verificar Expediente</text>
+        </name>
+      </transition>
+      <transition id="6a4b4b1b-defb-4671-a93b-0c7d629a0794">
+        <name>
+          <text>Validar Expediente</text>
+        </name>
+      </transition>
+      <transition id="1f864223-44c7-485c-a0fe-527cc69348ff">
+        <name>
+          <text>Enviar Resolucion</text>
+        </name>
+      </transition>
+      <arc id="140631807797376" source="17a22dd0-3384-4d49-bbc0-34479d2c1b06" target="p_5"/>
+      <arc id="140631803793664" source="0f7dc1eb-6868-48ef-aa32-89f22901ad0d" target="p_7"/>
+      <arc id="140631803794048" source="34cb92e0-cf36-47f6-854e-f3e3d95856fd" target="p_8"/>
+      <arc id="140631804700944" source="a0eafd22-55b3-444d-a852-fcd4ea8ac3d7" target="sink"/>
+      <arc id="140631807609632" source="155d6bb0-4e77-48ba-b09b-df17d5df3332" target="p_3"/>
+      <arc id="140631807610400" source="4017cc24-1c7b-47b2-befe-a9094cbb4ac9" target="p_4"/>
+      <arc id="140631807796896" source="f18a5521-83c7-4647-aec0-521b6557230c" target="p_6"/>
+      <arc id="140631804701088" source="p_8" target="6a4b4b1b-defb-4671-a93b-0c7d629a0794"/>
+      <arc id="140631807646880" source="a5e96a17-cfa4-45dd-bd1c-91bc18fecc0c" target="sink"/>
+      <arc id="140631809624624" source="6a4b4b1b-defb-4671-a93b-0c7d629a0794" target="p_10"/>
+      <arc id="140631807646640" source="1f864223-44c7-485c-a0fe-527cc69348ff" target="sink"/>
+      <arc id="140631807609920" source="source" target="155d6bb0-4e77-48ba-b09b-df17d5df3332"/>
+      <arc id="140631803793472" source="p_6" target="0f7dc1eb-6868-48ef-aa32-89f22901ad0d"/>
+      <arc id="140631803793856" source="p_7" target="34cb92e0-cf36-47f6-854e-f3e3d95856fd"/>
+      <arc id="140631806323776" source="p_10" target="d8ad4fed-c8d4-4a26-83c2-295278aaff98"/>
+      <arc id="140631804702528" source="p_9" target="a0eafd22-55b3-444d-a852-fcd4ea8ac3d7"/>
+      <arc id="140631807610064" source="p_3" target="4017cc24-1c7b-47b2-befe-a9094cbb4ac9"/>
+      <arc id="140631804702288" source="p_8" target="1dd8db83-4b68-43a7-be0b-166f8e49d547"/>
+      <arc id="140631804702672" source="1dd8db83-4b68-43a7-be0b-166f8e49d547" target="p_9"/>
+      <arc id="140631807645008" source="p_10" target="6b5d17ee-1a84-47cc-ae14-a4b7642d9db9"/>
+      <arc id="140631807645392" source="6b5d17ee-1a84-47cc-ae14-a4b7642d9db9" target="p_12"/>
+      <arc id="140631807646928" source="p_12" target="1f864223-44c7-485c-a0fe-527cc69348ff"/>
+      <arc id="140631807797088" source="p_5" target="f18a5521-83c7-4647-aec0-521b6557230c"/>
+      <arc id="140631807646688" source="p_11" target="a5e96a17-cfa4-45dd-bd1c-91bc18fecc0c"/>
+      <arc id="140631807795696" source="p_4" target="17a22dd0-3384-4d49-bbc0-34479d2c1b06"/>
+      <arc id="140631806321520" source="d8ad4fed-c8d4-4a26-83c2-295278aaff98" target="p_11"/>
+    </page>
+    <finalmarkings>
+      <marking>
+        <place idref="sink">
+          <text>1</text>
+        </place>
+      </marking>
+    </finalmarkings>
+  </net>
+</pnml>

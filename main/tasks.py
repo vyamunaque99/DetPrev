@@ -44,7 +44,16 @@ def conformance_cheking_task(conformance_checking_id):
     traces=[d['trace_is_fit'] for d in replayed_traces]
     indices = [i for i, x in enumerate(traces) if x == False]
     if indices:
-        nodes=[(replayed_traces[i]['transitions_with_problems'][0].label) for i in indices]
+        try:
+            nodes=[(replayed_traces[i]['transitions_with_problems'][0].label) for i in indices]
+        except:
+            nodes=[]
+            for var in indices:
+                transitions=list(replayed_traces[var]['enabled_transitions_in_marking'])
+                print(transitions)
+                for var2 in transitions:
+                    nodes.append(var2.label)
+            print(nodes)
         nodes_detail=', '.join([str(elem) for elem in nodes])
         #Almacenamiento de detalle
         conformance_checking_detail=ConformanceCheckingDetail.objects.create(execution_time=timezone.now(),process=conformance_checking,status='Desviacion encontrada',node=nodes_detail)
@@ -75,6 +84,6 @@ def conformance_cheking_task(conformance_checking_id):
     #Cierre de cliente
     else:
         #Almacenamiento de detalle
-        conformance_checking_detail=ConformanceCheckingDetail.objects.create(execution_time=timezone.now(),process=conformance_checking,status='Desviacion encontrada',node='No hubo errores')
+        conformance_checking_detail=ConformanceCheckingDetail.objects.create(execution_time=timezone.now(),process=conformance_checking,status='No se encontro desviaciones',node='No hubo errores')
         conformance_checking_detail.save()
     ssh.close()
