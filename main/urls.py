@@ -30,3 +30,4 @@ urlpatterns = [
     path('stakeholder_list_detail/delete/<int:stakeholder_list_id>/',stakeholder_list_detail_create_or_update),
     path('',main_view)
 ]
+

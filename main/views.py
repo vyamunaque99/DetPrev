@@ -14,6 +14,9 @@ import os
 import pm4py
 import shutil
 
+def page_not_found_view(request, exception):
+    return render(request, '404.html', status=404)
+
 # Validacion de usuario logeado
 
 
