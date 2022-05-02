@@ -52,7 +52,7 @@ def register_view(request):
         username = request.POST['username']
         password = request.POST['password']
         repeat_password = request.POST['repeat_password']
-        if User.objects.get(username=username): context['error_user']='El nombre de usuario ya esta en uso'
+        if User.objects.filter(username=username).exists(): context['error_user']='El nombre de usuario ya esta en uso'
         if password != repeat_password: context['error_message']='Las contraseñas no coinciden'
         if not first_name.isalpha(): context['error_first_name']='El nombre solo debe contener caracteres alfabeticos'
         if not last_name.isalpha(): context['error_last_name']='El apellido solo debe contener caracteres alfabeticos'
