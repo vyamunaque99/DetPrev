@@ -1,12 +1,13 @@
 import base64
-from pdb import pm
 from django.http.response import FileResponse
-from django.shortcuts import redirect, render, get_object_or_404
+from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, user_passes_test
+from sympy import Not
 from .forms import stakeholderListDetailForm, uploadDatasetForm, conformanceCheckingForm, stakeholderForm, stakeholderListForm
 from .models import ConformanceChecking, ConformanceCheckingDetail, Dataset, Stakeholder, StakeholderList, StakeholderListDetail
+from .utils import is_valid_email
 import pandas as pd
 import json
 import os
@@ -24,6 +25,7 @@ def user_is_not_logged_in(user):
 
 @user_passes_test(user_is_not_logged_in, '/')
 def login_view(request):
+    context={}
     if request.method == 'GET':
         return render(request, 'login.html')
     elif request.method == 'POST':
@@ -35,11 +37,12 @@ def login_view(request):
             return redirect('/')
         else:
             error_message = 'Credenciales incorrectas'
-            context = {'error_message': error_message}
+            context['error_message']=error_message
             return render(request, 'login.html', context)
 
 
 def register_view(request):
+    context={}
     if request.method == 'GET':
         return render(request, 'register.html')
     else:
@@ -49,9 +52,12 @@ def register_view(request):
         username = request.POST['username']
         password = request.POST['password']
         repeat_password = request.POST['repeat_password']
-        if password != repeat_password:
-            error_message = 'Las contraseñas no coinciden'
-            context = {'error_message': error_message}
+        if User.objects.get(username=username): context['error_user']='El nombre de usuario ya esta en uso'
+        if password != repeat_password: context['error_message']='Las contraseñas no coinciden'
+        if not first_name.isalpha(): context['error_first_name']='El nombre solo debe contener caracteres alfabeticos'
+        if not last_name.isalpha(): context['error_last_name']='El apellido solo debe contener caracteres alfabeticos'
+        if not is_valid_email(email): context['error_email']='El campo debe tener la estructura de un e-mail'
+        if len(context):
             return render(request, 'register.html', context)
         else:
             # Se crea un usuario a traves de la clase por defecto

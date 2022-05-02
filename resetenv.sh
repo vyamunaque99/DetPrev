@@ -6,3 +6,5 @@ mkdir main/assets
 echo 'Restablecimiento de BD'
 python3 manage.py makemigrations
 python3 manage.py migrate
+echo 'Reinicio de Broker'
+sudo systemctl restart redis.service
