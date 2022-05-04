@@ -38,6 +38,9 @@
                     </table>
                 </div>
             </div>
+            {% if error_message %}
+            <div class="alert alert-danger text-center" role="alert">{{error_message}}</div>
+            {% endif %}
             <input type="hidden" name="id_index" value="" id="js_id_index">
             <input type="hidden" name="step" value="1">
             <input type="submit" class="btn btn-secondary" name="submit" value="Submit">

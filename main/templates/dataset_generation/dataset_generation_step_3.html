@@ -38,14 +38,17 @@
                     </table>
                 </div>
             </div>
+            {% if error_column_message %}
+            <div class="alert alert-danger text-center" role="alert">{{error_column_message}}</div>
+            {% endif %}
+            {% if error_message %}
+            <div class="alert alert-danger text-center" role="alert">{{error_message}}</div>
+            {% endif %}
             <input type="hidden" name="timestamp_index" value="" id="js_id_index">
             <input type="hidden" name="step" value="3">
             <label for="dataset_name">Nombre del dataset:</label>
             <input type="text" name="dataset_name" id='dataset_name'>
-            <input type="submit" class="btn btn-secondary" name="submit" value="Submit">
-            {% if error_message %}
-            <div class="alert alert-danger text-center" role="alert">{{error_message}}</div>
-            {% endif %}
+            <input type="submit" class="btn btn-secondary" name="submit" value="Submit">            
         </form>
     </div>
 </div>

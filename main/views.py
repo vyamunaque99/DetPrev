@@ -105,8 +105,13 @@ def dataset_generation_view(request):
             return render(request, 'dataset_generation/dataset_generation_step_1.html', context)
         elif request.POST['step'] == '1':
             id_index = request.POST['id_index']
+            print(id_index)
             dataset_table_html = request.session.get('dataset_table_html')
-            context = {'dataset_table_html': dataset_table_html}
+            if id_index is '': 
+                context = {'dataset_table_html': dataset_table_html,'error_message':'Debe seleccionar una columna'}
+                return render(request, 'dataset_generation/dataset_generation_step_1.html', context)            
+            else:
+                context = {'dataset_table_html': dataset_table_html}
             # Se agrega el indice al diccionario de indices
             indexes = request.session.get('indexes')
             indexes['id_index'] = int(id_index)
@@ -115,7 +120,11 @@ def dataset_generation_view(request):
         elif request.POST['step'] == '2':
             activity_index = request.POST['activity_index']
             dataset_table_html = request.session.get('dataset_table_html')
-            context = {'dataset_table_html': dataset_table_html}
+            if activity_index is '': 
+                context = {'dataset_table_html': dataset_table_html,'error_message':'Debe seleccionar una columna'}
+                return render(request, 'dataset_generation/dataset_generation_step_2.html', context)            
+            else:
+                context = {'dataset_table_html': dataset_table_html}
             # Se agrega el indice al diccionario de indices
             indexes = request.session.get('indexes')
             indexes['activity_index'] = int(activity_index)
@@ -126,6 +135,13 @@ def dataset_generation_view(request):
             dataset_name = request.POST['dataset_name']
             # Validacion de formulario
             timestamp_index = request.POST['timestamp_index']
+            if timestamp_index is '': 
+                dataset_table_html = request.session.get('dataset_table_html')
+                context = {'dataset_table_html': dataset_table_html,'error_column_message':'Debe seleccionar una columna'}
+                return render(request, 'dataset_generation/dataset_generation_step_3.html', context)            
+            else:
+                dataset_table_html = request.session.get('dataset_table_html')
+                context = {'dataset_table_html': dataset_table_html}
             if dataset_name == '':
                 error_message = 'El dataset debe contener un nombre'
                 dataset_table_html = request.session.get('dataset_table_html')
