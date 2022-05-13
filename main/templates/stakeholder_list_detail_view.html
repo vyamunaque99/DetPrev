@@ -2,12 +2,14 @@
 {% load static %}
 {% block content %}
 <div class="col" align="right">
-    <form action="/stakeholder_list_detail/create_or_update">
+    <form action="/stakeholder_list_detail/create_or_update/">
         <button type="submit" class="btn btn-info mb-3">Agregar Lista de Alertas</button>
     </form>
 </div>
+{% if state %}
+    <div class="alert alert-success text-center mb-3" role="alert">{{state}}</div>
+{% endif %}
 <div class="main-card mb-3 card">
-
     <div class="card-body">
         <table class="mb-0 table" style="overflow-x:auto;">
             <thead>
@@ -26,7 +28,7 @@
                     <td>{{item.stakeholder_name.name}}</td>
                     <td>{{item.list_name.name}}</td>
                     <td>
-                        <form action="/stakeholder_list_detail/detail/{{item.id}}" method="get"><button type="submit"
+                        <form action="/stakeholder_list_detail/create_or_update/{{item.id}}" method="get"><button type="submit"
                                 class="btn btn-info">Editar</button></form>
                     </td>
                     <td>

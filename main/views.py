@@ -57,8 +57,8 @@ def register_view(request):
         repeat_password = request.POST['repeat_password']
         if User.objects.filter(username=username).exists(): context['error_user']='El nombre de usuario ya esta en uso'
         if password != repeat_password: context['error_message']='Las contraseñas no coinciden'
-        if not first_name.isalpha(): context['error_first_name']='El nombre solo debe contener caracteres alfabeticos'
-        if not last_name.isalpha(): context['error_last_name']='El apellido solo debe contener caracteres alfabeticos'
+        if not first_name.replace(' ','').isalpha(): context['error_first_name']='El nombre solo debe contener caracteres alfabeticos'
+        if not last_name.replace(' ','').isalpha(): context['error_last_name']='El apellido solo debe contener caracteres alfabeticos'
         if not is_valid_email(email): context['error_email']='El campo debe tener la estructura de un e-mail'
         if len(context):
             return render(request, 'register.html', context)
@@ -92,6 +92,10 @@ def dataset_generation_view(request):
         if request.POST['step'] == '0':
             form = uploadDatasetForm(request.POST, request.FILES)
             if form.is_valid():
+                if request.POST['separator']=='':
+                    form = uploadDatasetForm()
+                    context = {'form': form,'error_message':'El dataset debe contener un separador'}
+                    return render(request, 'dataset_generation/dataset_generation_upload.html', context)
                 dataset_table = dataset_handler(
                     request.FILES['file'], request.POST['separator'])
                 dataset_table_full = dataset_table[0]
@@ -305,10 +309,15 @@ def process_monitoring_delete(request, username, id):
 
 
 @login_required
-def stakeholder_view(request):
+def stakeholder_view(request,state=None):
+    context={}
     if request.method == 'GET':
+        if state=='create_success':
+            context['state']='Stakeholder registrado exitosamente'
+        elif state=='edit_sucess':
+            context['state']='Stakeholder editado exitosamente'
         stakeholders = Stakeholder.objects.all()
-        context = {'stakeholders': stakeholders}
+        context['stakeholders']=stakeholders
         return render(request, 'stakeholder_view.html', context)
 
 
@@ -325,7 +334,10 @@ def stakeholder_create_or_update(request, stakeholder_id=None):
     else:
         if form.is_valid():
             form.save()
-        return redirect('/stakeholder')
+        if stakeholder_id is None:
+            return redirect('/stakeholder/create_success')
+        else:
+            return redirect('/stakeholder/edit_sucess')
 
 
 @login_required
@@ -337,10 +349,15 @@ def stakeholder_delete(request, stakeholder_id):
 
 
 @login_required
-def stakeholder_list_view(request):
+def stakeholder_list_view(request,state=None):
+    context={}
     if request.method == 'GET':
+        if state=='create_success':
+            context['state']='Grupo registrado exitosamente'
+        elif state=='edit_sucess':
+            context['state']='Grupo editado exitosamente'
         stakeholder_list = StakeholderList.objects.all()
-        context = {'stakeholder_list': stakeholder_list}
+        context['stakeholder_list']=stakeholder_list
         return render(request, 'stakeholder_list_view.html', context)
 
 
@@ -358,21 +375,30 @@ def stakeholder_list_create_or_update(request, stakeholder_list_id=None):
     else:
         if form.is_valid():
             form.save()
-        return redirect('/stakeholder_list')
+        if stakeholder_list_id is None:
+            return redirect('/stakeholder_list/create_success')
+        else:
+            return redirect('/stakeholder_list/edit_sucess')
+
 
 
 @login_required
-def stakeholder_list_detail_view(request):
+def stakeholder_list_detail_view(request,state=None):
+    context={}
     if request.method == 'GET':
+        if state=='create_success':
+            context['state']='Alerta registrada exitosamente'
+        elif state=='edit_sucess':
+            context['state']='Alerta editada exitosamente'
         stakeholder_list_detail = StakeholderListDetail.objects.all()
-        context = {'stakeholder_list_detail': stakeholder_list_detail}
+        context['stakeholder_list_detail']=stakeholder_list_detail
         return render(request, 'stakeholder_list_detail_view.html', context)
 
 
 @login_required
 def stakeholder_list_detail_create_or_update(request, stakeholder_list_detail_id=None):
     if stakeholder_list_detail_id is not None:
-        stakeholder_list_detail = StakeholderList.objects.get(
+        stakeholder_list_detail = StakeholderListDetail.objects.get(
             id=stakeholder_list_detail_id)
         form = stakeholderListDetailForm(
             request.POST or None, instance=stakeholder_list_detail)
@@ -387,7 +413,22 @@ def stakeholder_list_detail_create_or_update(request, stakeholder_list_detail_id
             id=int(request.POST['stakeholder']))
         stakeholder_list = StakeholderList.objects.get(
             id=int(request.POST['stakeholder_list']))
-        stakeholder_list_detail = StakeholderListDetail(
-            list_name=stakeholder_list, stakeholder_name=stakeholder)
+        if stakeholder_list_detail_id is None:
+            stakeholder_list_detail = StakeholderListDetail(list_name=stakeholder_list, stakeholder_name=stakeholder)
+        else:
+            stakeholder_list_detail = StakeholderListDetail.objects.get(id=stakeholder_list_detail_id)
+            stakeholder_list_detail.stakeholder_name=stakeholder
+            stakeholder_list_detail.list_name=stakeholder_list
+        print(stakeholder_list_detail)
         stakeholder_list_detail.save()
+        if stakeholder_list_detail_id is None:
+            return redirect('/stakeholder_list_detail/create_success')
+        else:
+            return redirect('/stakeholder_list_detail/edit_sucess')
+
+@login_required
+def stakeholder_list_detail_delete(request, stakeholder_list_detail_id):
+    if request.method == 'POST':
+        stakeholder = StakeholderListDetail.objects.get(id=stakeholder_list_detail_id)
+        stakeholder.delete()
         return redirect('/stakeholder_list_detail')

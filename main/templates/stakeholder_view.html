@@ -2,12 +2,14 @@
 {% load static %}
 {% block content %}
 <div class="col" align="right">
-    <form action="/stakeholder/create_or_update">
+    <form action="/stakeholder/create_or_update/">
         <button type="submit" class="btn btn-info mb-3">Agregar Stakeholder</button>
     </form>
 </div>
-<div class="main-card mb-3 card">
-
+{% if state %}
+    <div class="alert alert-success text-center mb-3" role="alert">{{state}}</div>
+{% endif %}
+<div class="main-card mb-3 card">   
     <div class="card-body">
         <table class="mb-0 table" style="overflow-x:auto;">
             <thead>

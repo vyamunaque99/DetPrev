@@ -34,10 +34,13 @@
                 </div>
                 <div class="col text-center align-self-center">
                     <h3 class="text-center align-self-center">Separador</h3>
-                    <input type="text" name="separator" value="0">
+                    <input type="text" name="separator" value=";">
                     <input type="submit" value="Cargar" />
                 </div>
             </div>
+            {% if error_message %}
+            <div class="alert alert-danger text-center" role="alert" style="border-radius: 25px;">{{error_message}}</div>
+            {% endif %}
         </form>
     </div>
 </div>
