@@ -1,6 +1,5 @@
 from urllib import request
 from django import forms
-from matplotlib import widgets
 from .models import Dataset, Stakeholder, StakeholderList, StakeholderListDetail
 
 frecuency_choices =(
