@@ -4,7 +4,6 @@ from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, user_passes_test
-from sympy import Not
 from .forms import stakeholderListDetailForm, uploadDatasetForm, conformanceCheckingForm, stakeholderForm, stakeholderListForm
 from .models import ConformanceChecking, ConformanceCheckingDetail, Dataset, Stakeholder, StakeholderList, StakeholderListDetail
 from .utils import is_valid_email
